@@ -1,0 +1,35 @@
+{
+  "name": "atakajlo/notification-bundle",
+  "description": "simple notification bundle for symfony",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Dmytro Fedorenko",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Atakajlo\\NotificationBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Atakajlo\\NotificationBundle\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^7.4",
+    "atakajlo/notifications": "@dev",
+    "symfony/symfony": "^4.4 || ^5",
+    "centrifugal/phpcent": "^3.1",
+    "nyholm/dsn": "^2.0.0-beta1"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "~/www/notifications"
+    }
+  ]
+}

@@ -6,7 +6,7 @@
   "authors": [
     {
       "name": "Dmytro Fedorenko",
-      "email": "email@example.com"
+      "email": "atakajlo@gmail.com"
     }
   ],
   "autoload": {
@@ -25,11 +25,5 @@
     "symfony/symfony": "^4.4 || ^5",
     "centrifugal/phpcent": "^3.1",
     "nyholm/dsn": "^2.0.0-beta1"
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "~/www/notifications"
-    }
-  ]
+  }
 }

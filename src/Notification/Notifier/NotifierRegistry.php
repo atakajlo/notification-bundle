@@ -8,7 +8,7 @@ use Atakajlo\Notifications\Notifier\NotifierInterface;
 
 class NotifierRegistry implements NotifierRegistryInterface
 {
-    private array $notifiers;
+    private array $notifiers = [];
 
     public function __construct(iterable $notifiers)
     {

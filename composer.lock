@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ef11985b2bb93909c083c56dae13846",
+    "content-hash": "0e0fda1d1802e24c1f60c0fab0939fd3",
     "packages": [
         {
             "name": "atakajlo/notifications",
-            "version": "dev-master",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/atakajlo/notifications.git",
+                "reference": "e3d2df95460bf8124ca51ef4f6818c47c453d511"
+            },
             "dist": {
-                "type": "path",
-                "url": "/home/atakajlo/www/notifications",
-                "reference": "803d1e52fb2b16a520a2cf5b6e4478c1df8e87da"
+                "type": "zip",
+                "url": "https://api.github.com/repos/atakajlo/notifications/zipball/e3d2df95460bf8124ca51ef4f6818c47c453d511",
+                "reference": "e3d2df95460bf8124ca51ef4f6818c47c453d511",
+                "shasum": ""
             },
             "require": {
                 "php": "^7.4"
@@ -20,17 +26,14 @@
             "require-dev": {
                 "phpunit/phpunit": "^9"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Atakajlo\\Notifications\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Atakajlo\\Notifications\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -40,7 +43,12 @@
                     "email": "atakajlo@gmail.com"
                 }
             ],
-            "description": "Simple notification system"
+            "description": "Simple notification system",
+            "support": {
+                "issues": "https://github.com/atakajlo/notifications/issues",
+                "source": "https://github.com/atakajlo/notifications/tree/main"
+            },
+            "time": "2020-10-18T21:16:59+00:00"
         },
         {
             "name": "centrifugal/phpcent",
@@ -2230,5 +2238,5 @@
         "php": "^7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

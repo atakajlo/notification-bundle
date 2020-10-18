@@ -2,14 +2,19 @@ parameters:
   centrifugo.api.dsn: '%env(CENTRIFUGO_API_DSN)%'
 
 services:
-  %env(CENTRIFUGO_API_DSN)%: 'http://secret:secret@centrifugo:8000/api'
+  env(CENTRIFUGO_API_DSN): 'http://secret:secret@centrifugo:8000/api'
 
   # notifiers
   Atakajlo\NotificationBundle\Notification\Notifier\EmailNotifier:
+    arguments:
+      - '@mailer.mailer'
     tags:
       - { name: 'notification.notifier', key: 'email' }
 
   Atakajlo\NotificationBundle\Notification\Notifier\WebSocketNotifier:
+    arguments:
+      - '@phpcent\Client'
+      - 'notifications'
     tags:
       - { name: 'notification.notifier', key: 'web_socket' }
 
@@ -17,12 +22,15 @@ services:
     arguments:
       - !tagged { tag: 'notification.notifier', index_by: 'key' }
 
-  Atakajlo\NotificationBundle\Notification\NotificationDescriptor:
-    arguments: [[]]
+  Atakajlo\NotificationBundle\Channel\ChannelRegistry:
+    arguments:
+      - !tagged { tag: 'notification.channel.descriptor' }
 
-  Atakajlo\NotificationBundle\Factory\Factory\ClientFactory: ~
+
+
+  Atakajlo\NotificationBundle\Factory\ClientFactory: ~
 
   phpcent\Client:
-    factory: ['Atakajlo\NotificationBundle\Factory\Factory\ClientFactory, 'create']
+    factory: ['Atakajlo\NotificationBundle\Factory\ClientFactory, 'create']
     arguments:
       - '%centrifugo.api.dsn%'

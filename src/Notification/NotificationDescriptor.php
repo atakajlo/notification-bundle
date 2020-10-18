@@ -4,31 +4,24 @@ declare(strict_types=1);
 
 namespace Atakajlo\NotificationBundle\Notification;
 
-use Atakajlo\Notifications\Notification\NotificationInterface;
-
 class NotificationDescriptor
 {
-    private iterable $notifications;
+    private string $name;
+    private array $channels;
 
-    public function __construct(iterable $notifications)
+    public function __construct(string $name, array $channels)
     {
-        foreach ($notifications as $notification => $channels) {
-            $this->notifications[$notification] = $channels;
-        }
+        $this->name = $name;
+        $this->channels = $channels;
     }
 
-    public function getForNotification(NotificationInterface $notification): array
+    public function getName(): string
     {
-        $notificationKey = get_class($notification);
-        if (false !== array_key_exists($notificationKey, $this->notifications)) {
-            return $this->notifications[$notificationKey];
-        }
-
-        return [];
+        return $this->name;
     }
 
-    public function getNotifications(): iterable
+    public function getChannels(): array
     {
-        return $this->notifications;
+        return $this->channels;
     }
 }

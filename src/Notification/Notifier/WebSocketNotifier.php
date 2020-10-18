@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Atakajlo\NotificationBundle\Notification\Notifier;
 
+use Atakajlo\Notifications\Notifier\NotifierException;
 use Atakajlo\Notifications\Notifier\NotifierInterface;
 use phpcent\Client;
 
@@ -22,6 +23,10 @@ class WebSocketNotifier implements NotifierInterface
     {
         $channelName = sprintf('%s#%s', $this->channel, $recipient);
 
-        $this->client->publish($channelName, ['message' => $body]);
+        try {
+            $this->client->publish($channelName, ['message' => $body]);
+        } catch (\Exception $e) {
+            throw new NotifierException($e->getMessage());
+        }
     }
 }

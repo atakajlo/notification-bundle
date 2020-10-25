@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('atakajlo_notification');
 
@@ -21,6 +21,9 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->booleanNode('stop_after_notify')
                                 ->defaultFalse()
+                            ->end()
+                            ->scalarNode('priority')
+                                ->defaultValue(0)
                             ->end()
                         ->end()
                     ->end()

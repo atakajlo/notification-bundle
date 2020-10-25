@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Atakajlo\NotificationBundle\Notification;
 
+use Atakajlo\NotificationBundle\Channel\ChannelDescriptor;
 use Atakajlo\NotificationBundle\Channel\ChannelRegistryInterface;
+use Atakajlo\NotificationBundle\Channel\ChannelSorterInterface;
 use Atakajlo\NotificationBundle\Notification\Notifier\NotifierRegistryInterface;
 use Atakajlo\Notifications\Notification\NotificationInterface;
 use Atakajlo\Notifications\NotificationManagerInterface;
@@ -23,47 +25,53 @@ class NotificationManager implements NotificationManagerInterface, LoggerAwareIn
     private RendererInterface $renderer;
     private ChannelRegistryInterface $channelRegistry;
     private NotificationRegistryInterface $notificationRegistry;
+    private ChannelSorterInterface $channelSorter;
 
     public function __construct(
         NotifierRegistryInterface $notifierRegistry,
         RendererInterface $renderer,
         ChannelRegistryInterface $channelRegistry,
-        NotificationRegistryInterface $notificationRegistry
+        NotificationRegistryInterface $notificationRegistry,
+        ChannelSorterInterface $channelSorter
     ) {
         $this->notifierRegistry = $notifierRegistry;
         $this->renderer = $renderer;
         $this->channelRegistry = $channelRegistry;
         $this->notificationRegistry = $notificationRegistry;
+        $this->channelSorter = $channelSorter;
     }
 
     public function notify(RecipientInterface $recipient, NotificationInterface $notification): void
     {
         $renderedNotification = $this->renderer->render($notification);
 
-        foreach ($this->getNotifiersForNotification($notification) as $channel => $notifier) {
+        /** @var ChannelDescriptor $channelDescriptor */
+        /** @var NotifierInterface $notifier */
+        foreach ($this->getNotifiersForNotification($notification) as [$channelDescriptor, $notifier]) {
             try {
                 $notifier->notify($recipient->getTo(), $notification->getSubject(), $renderedNotification);
             } catch (NotifierException $e) {
                 $this->logger->error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             }
 
-            $channelDescriptor = $this->channelRegistry->get($channel);
             if ($channelDescriptor->shouldStopAfterNotify()) {
                 return;
             }
         }
     }
 
-    /**
-     * @return NotifierInterface[]
-     */
     private function getNotifiersForNotification(NotificationInterface $notification): iterable
     {
         $notificationKey = get_class($notification);
-        $channels = $this->notificationRegistry->get($notificationKey)->getChannels();
+        $channelDescriptors = $this->channelSorter->sort(
+            array_map(
+                fn(string $channel) => $this->channelRegistry->get($channel),
+                $this->notificationRegistry->get($notificationKey)->getChannels()
+            )
+        );
 
-        foreach ($channels as $channel) {
-            yield $channel => $this->notifierRegistry->get($channel);
+        foreach ($channelDescriptors as $channelDescriptor) {
+            yield [$channelDescriptor, $this->notifierRegistry->get($channelDescriptor->getName())];
         }
     }
 }

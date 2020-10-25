@@ -1,5 +1,6 @@
 {
   "name": "atakajlo/notification-bundle",
+  "type": "symfony-bundle",
   "description": "simple notification bundle for symfony",
   "minimum-stability": "dev",
   "license": "proprietary",
@@ -11,22 +12,27 @@
   ],
   "autoload": {
     "psr-4": {
-      "Atakajlo\\NotificationBundle\\": "src/"
-    }
+      "Atakajlo\\NotificationBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Atakajlo\\NotificationBundle\\Tests\\": "tests/"
+      "Atakajlo\\NotificationBundle\\Tests\\": "Tests/"
     }
   },
   "require": {
     "php": "^7.4",
-    "atakajlo/notifications": "9999999-dev",
-    "symfony/symfony": "^4.4 || ^5",
+    "atakajlo/notifications": "@dev",
     "centrifugal/phpcent": "^3.1",
-    "nyholm/dsn": "^2.0.0-beta1"
+    "nyholm/dsn": "^2.0.0-beta1",
+    "symfony/framework-bundle": "^4.3.8|^5.0",
+    "symfony/mailer": "^4.3.8|^5.0"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-master",
     "phpunit/phpunit": "^9"
   },
   "prefer-stable": true

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Atakajlo\NotificationBundle\Notification\Notifier;
 
+use Atakajlo\Notifications\Notifier\NotifierException;
 use Atakajlo\Notifications\Notifier\NotifierInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 
 class EmailNotifier implements NotifierInterface
 {
-    private Mailer $mailer;
+    private MailerInterface $mailer;
 
-    public function __construct(Mailer $mailer)
+    public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }

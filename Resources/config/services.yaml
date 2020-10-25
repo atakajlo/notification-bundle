@@ -1,0 +1,49 @@
+parameters:
+  centrifugo.api.dsn: '%env(CENTRIFUGO_API_DSN)%'
+  env(CENTRIFUGO_API_DSN): 'http://secret:secret@centrifugo:8000/api'
+
+services:
+  # notifiers
+  Atakajlo\NotificationBundle\Notification\Notifier\EmailNotifier:
+    arguments:
+      - '@mailer.mailer'
+    tags:
+      - { name: 'notification.notifier', key: 'email' }
+
+  Atakajlo\NotificationBundle\Notification\Notifier\WebSocketNotifier:
+    arguments:
+      - '@phpcent\Client'
+      - 'notifications'
+    tags:
+      - { name: 'notification.notifier', key: 'web_socket' }
+
+  Atakajlo\NotificationBundle\Notification\Notifier\NotifierRegistry:
+    arguments:
+      - !tagged { tag: 'notification.notifier', index_by: 'key' }
+
+  Atakajlo\NotificationBundle\Channel\ChannelRegistry:
+    arguments:
+      - !tagged { tag: 'notification.channel.descriptor' }
+
+  Atakajlo\NotificationBundle\Factory\ClientFactory: ~
+
+  phpcent\Client:
+    factory: ['Atakajlo\NotificationBundle\Factory\ClientFactory', 'create']
+    arguments:
+      - '%centrifugo.api.dsn%'
+
+  Atakajlo\NotificationBundle\Notification\NotificationRegistry: ~
+  Atakajlo\NotificationBundle\Notification\NotificationRegistryInterface: '@Atakajlo\NotificationBundle\Notification\NotificationRegistry'
+
+  Atakajlo\NotificationBundle\Channel\ChannelSorter: ~
+  Atakajlo\NotificationBundle\Channel\ChannelSorterInterface: '@Atakajlo\NotificationBundle\Channel\ChannelSorterInterface'
+
+  Atakajlo\NotificationBundle\Notification\NotificationManager:
+    arguments:
+      - '@Atakajlo\NotificationBundle\Notification\Notifier\NotifierRegistry'
+      - '@'
+      - '@Atakajlo\NotificationBundle\Channel\ChannelRegistry'
+      - '@Atakajlo\NotificationBundle\Notification\NotificationRegistry'
+      - '@Atakajlo\NotificationBundle\Channel\ChannelSorter'
+
+  Atakajlo\Notifications\NotificationManagerInterface: '@Atakajlo\NotificationBundle\Notification\NotificationManager'

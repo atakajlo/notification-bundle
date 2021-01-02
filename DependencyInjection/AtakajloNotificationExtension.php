@@ -33,6 +33,11 @@ class AtakajloNotificationExtension extends Extension
             );
 
             $definition->addTag('notification.notification.descriptor');
+
+            $container->setDefinition(
+                sprintf('atakajlo.notification.notification.%s.descriptor', $notificationName),
+                $definition
+            );
         }
 
         foreach ($config['channels'] as $channelName => $channelArguments) {

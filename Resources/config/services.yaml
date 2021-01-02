@@ -1,6 +1,6 @@
 parameters:
   centrifugo.api.dsn: '%env(CENTRIFUGO_API_DSN)%'
-  env(CENTRIFUGO_API_DSN): 'http://secret:secret@centrifugo:8000/api'
+  env(CENTRIFUGO_API_DSN): 'http://secret:secret@localhost:8083/api'
 
 services:
   # notifiers
@@ -23,7 +23,7 @@ services:
 
   Atakajlo\NotificationBundle\Channel\ChannelRegistry:
     arguments:
-      - !tagged { tag: 'notification.channel.descriptor' }
+      - !tagged_iterator 'notification.channel.descriptor'
 
   Atakajlo\NotificationBundle\Factory\ClientFactory: ~
 
@@ -32,18 +32,26 @@ services:
     arguments:
       - '%centrifugo.api.dsn%'
 
-  Atakajlo\NotificationBundle\Notification\NotificationRegistry: ~
+  Atakajlo\Notifications\Renderer\SimpleRenderer: ~
+  Atakajlo\Notifications\Renderer\RendererInterface: '@Atakajlo\Notifications\Renderer\SimpleRenderer'
+
+  Atakajlo\NotificationBundle\Notification\NotificationRegistry:
+    arguments:
+      - !tagged_iterator 'notification.notification.descriptor'
+
   Atakajlo\NotificationBundle\Notification\NotificationRegistryInterface: '@Atakajlo\NotificationBundle\Notification\NotificationRegistry'
 
   Atakajlo\NotificationBundle\Channel\ChannelSorter: ~
-  Atakajlo\NotificationBundle\Channel\ChannelSorterInterface: '@Atakajlo\NotificationBundle\Channel\ChannelSorterInterface'
+  Atakajlo\NotificationBundle\Channel\ChannelSorterInterface: '@Atakajlo\NotificationBundle\Channel\ChannelSorter'
 
   Atakajlo\NotificationBundle\Notification\NotificationManager:
     arguments:
       - '@Atakajlo\NotificationBundle\Notification\Notifier\NotifierRegistry'
-      - '@'
+      - '@Atakajlo\Notifications\Renderer\SimpleRenderer'
       - '@Atakajlo\NotificationBundle\Channel\ChannelRegistry'
       - '@Atakajlo\NotificationBundle\Notification\NotificationRegistry'
       - '@Atakajlo\NotificationBundle\Channel\ChannelSorter'
+    calls:
+      - ['setLogger', ['@logger']]
 
   Atakajlo\Notifications\NotificationManagerInterface: '@Atakajlo\NotificationBundle\Notification\NotificationManager'

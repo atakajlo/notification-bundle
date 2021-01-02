@@ -14,7 +14,7 @@ class NotificationRegistry implements NotificationRegistryInterface
     public function __construct(iterable $notifications)
     {
         foreach ($notifications as $notification) {
-            $this->notifications[$notification->get] = $notification;
+            $this->notifications[$notification->getName()] = $notification;
         }
     }
 
